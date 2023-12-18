@@ -118,11 +118,24 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-        elif args not in HBNBCommand.classes:
+
+        splitted_args = args.split(' ')
+        classname = splitted_args[0]
+        if classname not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[args]()
+
+        kwargs = {}
+        params = splitted_args[1:]
+        for param in params:
+            # see parse function definition at line 359
+            key, value = parse(param)
+            if key and value:
+                kwargs[key] = value
+
+        new_instance = HBNBCommand.classes[classname]()
         storage.save()
+        new_instance.__dict__.update(kwargs)
         print(new_instance.id)
         storage.save()
 
@@ -280,7 +293,7 @@ class HBNBCommand(cmd.Cmd):
             args = args.partition(' ')
 
             # if att_name was not quoted arg
-            if not att_name and args[0] is not ' ':
+            if not att_name and args[0] != ' ':
                 att_name = args[0]
             # check for quoted val arg
             if args[2] and args[2][0] == '\"':
@@ -319,6 +332,44 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
+
+def get_value(string):
+    """
+parses a string and returns either a string, float, integer or None
+    """
+    value = None
+    if string and string[0] == '"' and string[-1] == '"':
+        value = string[1:len(string)-1]
+        if '"' in value:
+            value_list = list(string[1:len(string)-1])
+            for index, char in enumerate(value_list):
+                if index > 0 and char == '"' and value_list[index-1] == '\\':
+                    value_list[index-1] = ''
+                else:
+                    return None
+                value = ''.join(value_list)
+    elif not string.isnumeric() and string.replace('.', '', 1).isnumeric():
+        value = float(string)
+    elif string.isnumeric():
+        value = int(string)
+    return value
+
+
+def parse(param):
+    """\
+parses parameters seperated by = and returns a tuple of key and value pairs.
+    """
+    default = (None, None)
+    split_param = param.split('=')
+    if len(split_param) != 2:
+        return default
+    key = split_param[0]
+    value = get_value(split_param[1])
+    if key is not None and value is not None:
+        return (key, value)
+    return default
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
