@@ -134,10 +134,9 @@ class HBNBCommand(cmd.Cmd):
                 kwargs[key] = value
 
         new_instance = HBNBCommand.classes[classname]()
-        storage.save()
         new_instance.__dict__.update(kwargs)
         print(new_instance.id)
-        storage.save()
+        new_instance.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -219,11 +218,11 @@ class HBNBCommand(cmd.Cmd):
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage.all().items():
                 if k.split('.')[0] == args:
                     print_list.append(str(v))
         else:
-            for k, v in storage._FileStorage__objects.items():
+            for k, v in storage.all().items():
                 print_list.append(str(v))
 
         print(print_list)
@@ -340,7 +339,7 @@ parses a string and returns either a string, float, integer or None
     """
     value = None
     if string and string[0] == '"' and string[-1] == '"':
-        value = string[1:len(string)-1]
+        value = string[1:len(string)-1].replace('_', ' ')
         if '"' in value:
             value_list = list(string[1:len(string)-1])
             for index, char in enumerate(value_list):
