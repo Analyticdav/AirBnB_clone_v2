@@ -6,7 +6,7 @@ from os import getenv
 from sqlalchemy import create_engine, URL
 from sqlalchemy.orm import sessionmaker, scoped_session
 from models.base_model import Base
-# from models.user import User
+from models.user import User
 from models.state import State
 from models.city import City
 # from models.place import Place
@@ -30,7 +30,7 @@ Engine that handles storage to a mysql database
     }
 
     __types = {
-        'State': State, 'City': City
+            'State': State, 'City': City, 'User': User
     }
 
     def __init__(self):
