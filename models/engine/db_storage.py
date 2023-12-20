@@ -10,7 +10,7 @@ from models.user import User
 from models.state import State
 from models.city import City
 from models.place import Place
-# from models.amenity import Amenity
+from models.amenity import Amenity
 from models.review import Review
 
 
@@ -31,7 +31,7 @@ Engine that handles storage to a mysql database
 
     __types = {
             'State': State, 'City': City, 'User': User, 'Place': Place,
-            'Review': Review
+            'Review': Review, 'Amenity': Amenity
     }
 
     def __init__(self):
