@@ -65,7 +65,7 @@ amenity_ids that contains all Amenity.id linked to the Place
                         collection.append(obj)
             return collection
 
-        @property.setter
+        @amenities.setter
         def amenities(self, obj):
             """ handles append method for adding an Amenity.id to the \
 attribute amenity_ids"""
