@@ -9,7 +9,8 @@ hbnb_storage = getenv('HBNB_TYPE_STORAGE', default=None)
 place_amenity = Table('place_amenity', Base.metadata,
                       Column('place_id', String(60), ForeignKey('places.id'),
                              primary_key=True, nullable=False),
-                      Column('amenity_id', String(60), ForeignKey('amenities.id'),
+                      Column('amenity_id', String(60),
+                             ForeignKey('amenities.id'),
                              primary_key=True, nullable=False))
 
 
@@ -66,7 +67,8 @@ amenity_ids that contains all Amenity.id linked to the Place
 
         @property.setter
         def amenities(self, obj):
-            """ handles append method for adding an Amenity.id to the attribute amenity_ids"""
+            """ handles append method for adding an Amenity.id to the \
+attribute amenity_ids"""
             from amenity import Amenity
 
             if isinstance(obj, Amenity):
