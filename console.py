@@ -130,9 +130,9 @@ class HBNBCommand(cmd.Cmd):
         for param in params:
             # see parse function definition at line 359
             key, value = parse(param)
-            if key and value:
+            if key is not None and value is not None:
                 kwargs[key] = value
-
+        print(kwargs)
         new_instance = HBNBCommand.classes[classname]()
         for key, value in kwargs.items():
             new_instance.__dict__[key] = value
@@ -349,9 +349,10 @@ parses a string and returns either a string, float, integer or None
                 else:
                     return None
                 value = ''.join(value_list)
-    elif not string.isnumeric() and string.replace('.', '', 1).isnumeric():
+    elif not string.isnumeric() and string.replace('.', '', 1).isnumeric()\
+ or (string[0] == '-' and string[1:].replace('.', '', 1).isnumeric()):
         value = float(string)
-    elif string.isnumeric():
+    elif string.isnumeric() or (string[0] == '-' and string[1:].isnumeric()):
         value = int(string)
     return value
 
